@@ -318,8 +318,17 @@ module I18nRouting
       tp = @options[:as] && I18nRouting.translation_for(@options[:as], :named_routes) ||
           !ts.blank? && I18nRouting.translation_for(ts, :named_routes_path) || ts
 
-      localized_scope = I18nRouting.translation_for(@scope[:path].gsub(/\//, ''), :scopes) if @scope[:path]
-      path = localized_scope ? '/' << localized_scope : @scope[:path]
+      if @scope[:path]
+        path = ''
+        @scope[:path].split( '/' ).each do |s|
+          if s != ''
+            localized_scope = I18nRouting.translation_for(s, :scopes)
+            path = path + '/' + ( localized_scope ? localized_scope : s )
+          end
+        end
+      else
+        path = @scope[:path]
+      end
       @localized_path = File.join((path || ''), tp).gsub(/\/$/, '')
 
       # If a translated path exists, set localized infos
