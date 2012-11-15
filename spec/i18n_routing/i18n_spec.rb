@@ -115,6 +115,15 @@ describe :localized_routes do
               end
             end
 
+            scope "shop" do
+              scope "german" do
+                match "/sausage" => "meal#show", :as => :shop_german_sausage
+                resources :weshs do
+                  resources :in_weshs
+                end
+              end
+            end
+
             resources :universes do
               resources :galaxies do
                 resources :planets do
@@ -425,6 +434,20 @@ describe :localized_routes do
       it "should translate the scope too and even in french!" do
         I18n.locale = 'fr'
         routes.send(:german_sausage_path).should == "/#{I18n.t :german, :scope => :scopes}/#{I18n.t :sausage, :scope => :named_routes_path}"
+        # Scoping is not yet supported on resources ...
+        #routes.send(:weshs_path).should == "/#{I18n.t :german, :scope => :scopes}/#{I18n.t :weshs, :scope => :resources}"
+        #routes.send(:wesh_in_wesh_path).should == "/#{I18n.t :german, :scope => :scopes}/#{I18n.t :weshs, :scope => :resources}/#{I18n.t :in_weshs, :scope => :resources}"
+      end
+
+      it "should translate deep scope too" do
+        routes.send(:shop_german_sausage_path).should == "/#{I18n.t :shop, :scope => :scopes}/#{I18n.t :german, :scope => :scopes}/#{I18n.t :sausage, :scope => :named_routes_path}"
+        # Scoping is not yet supported on resources ...
+        #routes.send(:weshs_path).should == "/#{I18n.t :german, :scope => :scopes}/weshs"
+      end
+
+      it "should translate deep scope too and even in french!" do
+        I18n.locale = 'fr'
+        routes.send(:shop_german_sausage_path).should == "/#{I18n.t :shop, :scope => :scopes}/#{I18n.t :german, :scope => :scopes}/#{I18n.t :sausage, :scope => :named_routes_path}"
         # Scoping is not yet supported on resources ...
         #routes.send(:weshs_path).should == "/#{I18n.t :german, :scope => :scopes}/#{I18n.t :weshs, :scope => :resources}"
         #routes.send(:wesh_in_wesh_path).should == "/#{I18n.t :german, :scope => :scopes}/#{I18n.t :weshs, :scope => :resources}/#{I18n.t :in_weshs, :scope => :resources}"

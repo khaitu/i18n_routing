@@ -30,6 +30,7 @@ fr:
     foofoo: froufrou
     contact: 'contactez-nous'
   scopes:
+    shop: 'boutique'
     german: 'allemand'
   named_routes_path:
     about: 'a-propos'
